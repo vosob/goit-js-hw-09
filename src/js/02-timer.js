@@ -53,17 +53,23 @@ function handlerClick() {
   Notiflix.Notify.success('Timer is running');
   refs.button.disabled = true;
   let selectDate = new Date(refs.input.value).getTime();
-  let ms = selectDate - currentDate;
-  let id;
-  if (ms > 0) {
-    id = setInterval(() => {
-      ms -= 1000;
-      refs.day.textContent = formatTime(convertMs(ms).days);
-      refs.hours.textContent = formatTime(convertMs(ms).hours);
-      refs.minutes.textContent = formatTime(convertMs(ms).minutes);
-      refs.seconds.textContent = formatTime(convertMs(ms).seconds);
-    }, 1000);
-  } else {
-    clearInterval(id);
-  }
+  let ms = Math.floor((selectDate - currentDate) / 1000) * 1000;
+  updformatTime(ms);
+  let id = setInterval(() => {
+    ms -= 1000;
+    console.log(ms);
+
+    if (ms <= 0) {
+      clearInterval(id);
+      Notiflix.Notify.success('Timer is finished');
+    }
+    updformatTime(ms);
+  }, 1000);
+}
+
+function updformatTime(ms) {
+  refs.day.textContent = formatTime(convertMs(ms).days);
+  refs.hours.textContent = formatTime(convertMs(ms).hours);
+  refs.minutes.textContent = formatTime(convertMs(ms).minutes);
+  refs.seconds.textContent = formatTime(convertMs(ms).seconds);
 }
